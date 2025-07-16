@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive HTML Learning Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Chosen Palette: Warm Neutrals */
+        /* Application Structure Plan: A two-column layout with a fixed, scrollable left-side navigation menu and a dynamic, scrollable right-side content panel. This structure turns the linear document into a non-linear, easily navigable learning tool, ideal for both sequential learning and quick reference. The user can instantly jump to any topic, which is far more efficient than scrolling through a single long page. */
+        /* Visualization & Content Choices: The source material is educational text and code. The primary "visualizations" are the structured text and styled code blocks. Report Info: HTML Concepts -> Goal: Inform -> Method: Styled text blocks (headings, paragraphs, lists). Interaction: Reading. Justification: Clear, legible presentation. Report Info: Code Examples -> Goal: Demonstrate -> Method: Styled <pre><code> blocks with a distinct background and monospace font. Interaction: Reading/Copying. Justification: Simulates a code editor feel and enhances readability. Report Info: Button Interactivity -> Goal: Demonstrate -> Method: A live HTML button. Interaction: Clicking to trigger a JS message. Justification: Reinforces the lesson with a practical, interactive example. Libraries: Vanilla JS for navigation and interactions. */
+        /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+        :root {
+            --bg-main: #f8f7f2;
+            --bg-nav: #edebe4;
+            --text-main: #3d3d3d;
+            --text-heading: #2c2c2c;
+            --accent: #d97706; /* amber-600 */
+            --accent-light: #fef3c7; /* amber-100 */
+            --code-bg: #e2e1dc;
+            --border-color: #d1d0cb;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+        .fira-code {
+            font-family: 'Fira Code', monospace;
+        }
+        .topic-content h2, .topic-content h3, .topic-content h4 {
+            color: var(--text-heading);
+            font-weight: 700;
+        }
+        .nav-link.active {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            font-weight: 500;
+        }
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        .code-block pre, .code-block code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.875rem;
+            color: var(--text-main);
+        }
+        p > code, li > code {
+            background-color: var(--code-bg);
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Navigation Sidebar -->
+        <aside id="sidebar" class="w-full md:w-64 lg:w-72 bg-bg-nav border-r border-border-color p-4 md:p-6 flex-shrink-0">
+            <h1 class="text-2xl font-bold text-text-heading mb-6">HTML Notes</h1>
+            <nav id="nav-menu" class="space-y-2">
+                <!-- Navigation links will be injected here by JavaScript -->
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <div id="content-container" class="max-w-4xl mx-auto">
+                <!-- Content will be injected here by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const topics = [
+            { id: 'what-is-html', title: 'What is HTML?' },
+            { id: 'html-file-structure', title: 'HTML File Structure' },
+            { id: 'document-meta-data', title: 'Document Meta Data' },
+            { id: 'document-structure', title: 'Document Structure' },
+            { id: 'elements', title: 'Elements' },
+            { id: 'attributes', title: 'Attributes' },
+            { id: 'void-elements', title: 'Void Elements' },
+            { id: 'core-html-tags', title: 'Core HTML Tags' },
+            { id: 'nesting', title: 'Nesting' },
+            { id: 'buttons', title: 'Buttons' },
+            { id: 'input-field', title: 'Input Field' },
+            { id: 'anchor-tags', title: 'Anchor Tags' },
+            { id: 'lists', title: 'Lists' },
+            { id: 'headings', title: 'Headings' },
+            { id: 'paragraphs', title: 'Paragraphs' },
+            { id: 'line-breaks-and-horizontal-rules', title: 'Line Breaks & Rules' },
+            { id: 'text-formatting', title: 'Text Formatting' },
+            { id: 'image-tag', title: 'Image Tag' },
+            { id: 'audio-and-video-tag', title: 'Audio & Video Tag' },
+            { id: 'iframe-tag', title: 'Iframe Tag' },
+            { id: 'tables', title: 'Tables' },
+            { id: 'forms', title: 'Forms' },
+            { id: 'data-attributes', title: 'Data Attributes' },
+            { id: 'aria-attributes', title: 'ARIA Attributes' },
+            { id: 'semantic-html', title: 'Semantic HTML' },
+            { id: 'block-vs-inline-elements', title: 'Block vs Inline' },
+            { id: 'internal-navigation-structure', title: 'Internal Navigation' },
+            { id: 'linking-css', title: 'Linking CSS' },
+            { id: 'adding-javascript', title: 'Adding JavaScript' },
+        ];
+
+        const contentData = {
+            'what-is-html': `
+                <h2 class="text-3xl font-bold mb-4">What is HTML?</h2>
+                <p class="mb-4">HTML (HyperText Markup Language) is the standard markup language used to create web pages. It serves as the backbone of web content and structure, providing the basic building blocks for websites.</p>
+                <p class="mb-4">HTML uses a series of elements (tags) to define the structure and content of a webpage. These elements tell web browsers how to display the content.</p>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Key characteristics of HTML:</h3>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li>It's not a programming language but a markup language that uses tags to define elements.</li>
+                    <li>HTML documents are files that end with a <code>.html</code> or <code>.htm</code> extension.</li>
+                    <li>It can be created and edited in any text editor.</li>
+                    <li>It's the foundation for other web technologies like CSS (for styling) and JavaScript (for interactivity).</li>
+                    <li>The current version is HTML5, which introduced many new features including semantic elements, form controls, and support for audio and video without requiring plugins.</li>
+                </ul>
+            `,
+            'html-file-structure': `
+                <h2 class="text-3xl font-bold mb-4">HTML File Structure</h2>
+                <p class="mb-4">An HTML file follows a standard structure that helps browsers interpret and display the content correctly. Here's the basic structure of an HTML document:</p>
+                <div class="code-block mb-4"><pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Document Title&lt;/title&gt;
+    &lt;link rel="stylesheet" href="styles.css"&gt;
+    &lt;script src="script.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Content goes here --&gt;
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Key Components Breakdown:</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong><code>&lt;!DOCTYPE html&gt;</code>:</strong> The document type declaration, which tells the browser that this is an HTML5 document.</li>
+                    <li><strong><code>&lt;html&gt;</code>:</strong> The root element that contains all other HTML elements, with the "lang" attribute specifying the language.</li>
+                    <li><strong><code>&lt;head&gt;</code>:</strong> Contains meta-information about the document that isn't displayed on the page itself.</li>
+                    <li><strong><code>&lt;meta&gt;</code>:</strong> Provides metadata about the HTML document, such as character encoding and viewport settings.</li>
+                    <li><strong><code>&lt;title&gt;</code>:</strong> Sets the title of the webpage (shown in the browser tab).</li>
+                    <li><strong><code>&lt;link&gt;</code>:</strong> Links to external resources like CSS files.</li>
+                    <li><strong><code>&lt;script&gt;</code>:</strong> Used to embed or reference JavaScript code.</li>
+                    <li><strong><code>&lt;body&gt;</code>:</strong> Contains all the content that will be visible on the webpage.</li>
+                </ul>
+                <p class="mt-4">This structure forms the foundation of every HTML document, providing the necessary framework for browsers to properly render web content.</p>
+            `,
+            'document-meta-data': `
+                <h2 class="text-3xl font-bold mb-4">Document Meta Data</h2>
+                <p class="mb-4">Document metadata is information about the HTML document itself that doesn't appear visibly on the webpage but provides important information to browsers and other web services. This metadata is typically placed within the <code>&lt;head&gt;</code> section of an HTML document.</p>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Key Metadata Elements:</h3>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong><code>&lt;meta charset="UTF-8"&gt;</code>:</strong> Specifies the character encoding for the document, ensuring that special characters display correctly.</li>
+                    <li><strong><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>:</strong> Controls how the page is displayed on mobile devices, enabling responsive design.</li>
+                    <li><strong><code>&lt;meta name="description" content="..."&gt;</code>:</strong> Provides a brief description of the page content, which search engines may use in search results.</li>
+                    <li><strong><code>&lt;meta name="keywords" content="..."&gt;</code>:</strong> Lists keywords related to the page content (less important for SEO now).</li>
+                    <li><strong><code>&lt;meta name="author" content="..."&gt;</code>:</strong> Indicates who created the webpage.</li>
+                    <li><strong><code>&lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;</code>:</strong> Ensures the highest mode available to Internet Explorer is used.</li>
+                    <li><strong><code>&lt;meta name="robots" content="index, follow"&gt;</code>:</strong> Controls how search engines index and follow links on the page.</li>
+                </ul>
+                <p class="mb-4">Well-structured metadata improves SEO (Search Engine Optimization), ensures proper rendering across different devices and browsers, and provides valuable information to web crawlers and other automated systems.</p>
+            `,
+             'buttons': `
+                <h2 class="text-3xl font-bold mb-4">Buttons</h2>
+                <p class="mb-4">In HTML, buttons are interactive elements that users can click to trigger actions. They're crucial for forms, user interfaces, and interactive web applications.</p>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Types of Buttons</h3>
+                <h4 class="text-xl font-bold mt-4 mb-2">Basic Button Tag</h4>
+                <div class="code-block mb-4"><pre><code>&lt;button&gt;Click Me&lt;/button&gt;</code></pre></div>
+                <h4 class="text-xl font-bold mt-4 mb-2">Button Types</h4>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>Submit button:</strong> Submits form data to the server when clicked. <code>&lt;button type="submit"&gt;Submit&lt;/button&gt;</code></li>
+                    <li><strong>Reset button:</strong> Resets all form fields to their default values. <code>&lt;button type="reset"&gt;Reset&lt;/button&gt;</code></li>
+                    <li><strong>Generic button:</strong> Doesn't submit or reset by default, typically used with JavaScript. <code>&lt;button type="button"&gt;Click Me&lt;/button&gt;</code></li>
+                </ul>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Interactive Example</h3>
+                <p class="mb-4">This section demonstrates a generic button with a JavaScript event listener. This is a common pattern for triggering actions without submitting a form. Click the button to see a message appear.</p>
+                <div class="code-block mb-4"><pre><code>&lt;!-- HTML --&gt;
+&lt;button id="interactive-button"&gt;Click for a message&lt;/button&gt;
+
+&lt;!-- JavaScript --&gt;
+&lt;script&gt;
+  document.getElementById('interactive-button')
+    .addEventListener('click', function() {
+      // Logic to show a message
+  });
+&lt;/script&gt;</code></pre></div>
+                <div class="p-4 border border-border-color rounded-lg mt-4">
+                    <button id="interactive-button" class="bg-accent text-white py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">Click for a message</button>
+                    <p id="interactive-message" class="mt-3 text-text-main hidden"></p>
+                </div>
+            `,
+             'adding-javascript': `
+                <h2 class="text-3xl font-bold mb-4">Adding JavaScript using Script Tag</h2>
+                <p class="mb-4">The <code>&lt;script&gt;</code> tag is used to embed or reference JavaScript code in an HTML document. JavaScript adds interactivity and dynamic behavior to web pages.</p>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Basic Syntax</h3>
+                <p class="mb-2">The <code>&lt;script&gt;</code> tag can be placed in the <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code> section.</p>
+                <h4 class="text-xl font-bold mt-4 mb-2">Embedding inline JavaScript</h4>
+                <div class="code-block mb-4"><pre><code>&lt;script&gt;
+  // JavaScript code goes here
+  console.log('Hello from inline JavaScript!');
+&lt;/script&gt;</code></pre></div>
+                <h4 class="text-xl font-bold mt-4 mb-2">Linking an external JavaScript file</h4>
+                <div class="code-block mb-4"><pre><code>&lt;script src="script.js"&gt;&lt;/script&gt;</code></pre></div>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Key Attributes</h3>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong><code>src</code>:</strong> Specifies the path to an external JavaScript file.</li>
+                    <li><strong><code>type</code>:</strong> Specifies the type of script. In HTML5, this attribute is optional as <code>text/javascript</code> is the default.</li>
+                    <li><strong><code>async</code>:</strong> (Boolean attribute) Specifies that the script should be executed asynchronously. The script will be downloaded in parallel with parsing the HTML and executed as soon as it's available, potentially out of order. Useful for independent scripts like analytics.</li>
+                    <li><strong><code>defer</code>:</strong> (Boolean attribute) Specifies that the script should be executed after the HTML document has been fully parsed. Scripts with <code>defer</code> are executed in the order they appear in the document. This is the recommended approach for scripts that interact with the DOM.</li>
+                </ul>
+                <h3 class="text-2xl font-bold mt-6 mb-3">Placement of <code>&lt;script&gt;</code> Tags</h3>
+                 <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>In <code>&lt;head&gt;</code> (without defer/async):</strong> Pauses HTML parsing to download and execute. Can slow down page rendering.</li>
+                    <li><strong>At the end of <code>&lt;body&gt;</code>:</strong> A common practice. HTML is parsed before the script runs, ensuring the DOM is ready for manipulation.</li>
+                    <li><strong>In <code>&lt;head&gt;</code> with <code>defer</code>:</strong> **Recommended modern practice.** Downloads in parallel and executes after HTML is parsed.</li>
+                    <li><strong>In <code>&lt;head&gt;</code> with <code>async</code>:</strong> For independent scripts where execution order doesn't matter.</li>
+                </ul>
+            `,
+        };
+
+        const navMenu = document.getElementById('nav-menu');
+        const contentContainer = document.getElementById('content-container');
+
+        // Populate navigation
+        topics.forEach(topic => {
+            const link = document.createElement('a');
+            link.href = `#${topic.id}`;
+            link.textContent = topic.title;
+            link.className = 'nav-link block p-2 rounded-lg hover:bg-accent-light transition-colors';
+            link.dataset.topicId = topic.id;
+            navMenu.appendChild(link);
+        });
+
+        // Function to load content
+        function loadContent(topicId) {
+            // Update active link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.topicId === topicId);
+            });
+            
+            // Display content
+            contentContainer.innerHTML = contentData[topicId] || '<h2 class="text-3xl font-bold mb-4">Content not found.</h2><p>Please select a topic from the menu.</p>';
+            
+            // Add event listeners for interactive elements if they exist in the loaded content
+            if (topicId === 'buttons') {
+                const interactiveButton = document.getElementById('interactive-button');
+                const interactiveMessage = document.getElementById('interactive-message');
+                if (interactiveButton) {
+                    interactiveButton.addEventListener('click', () => {
+                        interactiveMessage.textContent = 'Great! You\'ve triggered a JavaScript event.';
+                        interactiveMessage.classList.remove('hidden');
+                        setTimeout(() => interactiveMessage.classList.add('hidden'), 3000);
+                    });
+                }
+            }
+        }
+        
+        // Handle navigation clicks using event delegation
+        navMenu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                const topicId = e.target.dataset.topicId;
+                window.location.hash = topicId;
+            }
+        });
+
+        // Handle initial page load and hash changes
+        function handleRouteChange() {
+            const topicId = window.location.hash.substring(1) || topics[0].id;
+            loadContent(topicId);
+            window.scrollTo(0, 0);
+        }
+
+        window.addEventListener('hashchange', handleRouteChange);
+        
+        // Initial load
+        handleRouteChange();
+
+    </script>
+</body>
+</html>
